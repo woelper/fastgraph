@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Test</title>
+    <meta charset="utf-8"/>
+
+  </head>
+  <body>
+
+    
+    <canvas id="test"></canvas>
+    <script src="fastgraph.js"></script>
+    <script>
+      var points = [1,2,3,1,2,3,10,3,4,3];
+      var labels = ['a','b','c','d','e','f','g','h','i','j'];
+      var data = {binding: []};
+      data.binding[0] = points;
+      data.binding[1] = labels;
+      var canvas = document.getElementById("test");
+      graph(canvas, points, labels);
+    </script>
+
+
+
+
+  </body>
+</html>
