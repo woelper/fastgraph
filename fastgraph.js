@@ -52,7 +52,7 @@ function fit(s, low1, high1, low2, high2) {
 
 
 //// The main graph function
-function graph (canvasElement, points, labels, userSettings) {
+function fastgraph (canvasElement, points, labels, userSettings) {
 
     var settings = {
         graphAverage: false, //calculate a line expressing the average
@@ -67,6 +67,10 @@ function graph (canvasElement, points, labels, userSettings) {
         yLabelColor: "#222222" //can you guess?
     };
 
+    if (userSettings != undefined) {
+        settings = Object.assign(settings, userSettings);
+    }
+
     // Get canvas context
     var ctx = canvasElement.getContext("2d");
     
@@ -76,11 +80,11 @@ function graph (canvasElement, points, labels, userSettings) {
     };
     
     if (ctx.canvas.clientWidth != 0) {
-        ctx.canvas.width = ctx.canvas.clientWidth*1.6;
+        ctx.canvas.width = ctx.canvas.clientWidth;
     }
 
     if (ctx.canvas.clientHeight != 0) {
-        ctx.canvas.height = ctx.canvas.clientHeight*1.6;
+        ctx.canvas.height = ctx.canvas.clientHeight;
     }
 
     var res = {
@@ -190,11 +194,16 @@ function graph (canvasElement, points, labels, userSettings) {
 
         labelExtremes(pts, pointY, ctx, settings.yLabelColor);
 
+
+        // x-axis data labels
         var nth = 0;
         var reducer = Math.round(fit(pts.length, 0, 80, 1, settings.labelReductionFactor));
-        // console.log('reducer', reducer);
         for (var op = 0; op < pts.length; op++) {
             
+            if (lbls[op] == undefined) {
+                continue;
+            }
+
             if (nth == reducer || op == 0) {
                 nth = 0;
                 //vertical bars
