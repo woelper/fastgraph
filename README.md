@@ -12,3 +12,5 @@ You might find this interesting if:
 * You use vue.js or something similiar and want to bind a data source to the graph that updates a lot
 
 * You're lazy and just need a really simple way to bang out an array of stuff to the screen
+
+Check out the demo web page [here!](https://rawgit.com/woelper/fastgraph/master/index.html)
