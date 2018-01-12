@@ -54,17 +54,22 @@ function fit(s, low1, high1, low2, high2) {
 //// The main graph function
 function fastgraph (canvasElement, points, labels, userSettings) {
 
+    console.log(points);
     var settings = {
-        graphAverage: false, //calculate a line expressing the average
-        graphTrend: false, //calculate a trend line
-        rotateYAxisLabels: 20, //degrees. rotate the y axis labels by this amount. Good for dense data.
         labelReductionFactor: 1, //the higher the factor, the higher the reduction
+        
+        showAverage: false, //calculate a line expressing the average
+        showTrend: false, //calculate a trend line
+        showVerticalBars: false,
+        yAxisLabelRotation: 0, //degrees. rotate the y axis labels by this amount. Good for dense data.
+        xAxisLabelRotation: 20, //degrees. rotate the x axis labels by this amount. Good for dense data.
         fillArea: false, //fill the area below the graph?
+        
         graphColor: "#ccc", //the graph line
         areaFillColor: "rgba(63,81,181,0.1)", //graph area fill color
         verticalBarColor: "#cccccc", //the vertical indicators above the y-legends
-        xLabelColor: "#888888", //well, the color of the x labels.
-        yLabelColor: "#222222" //can you guess?
+        xLabelColor: "#888", //well, the color of the x labels.
+        yLabelColor: "#888" //can you guess?
     };
 
     if (userSettings != undefined) {
@@ -97,13 +102,21 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         top: ctx.canvas.height/4,
         left: ctx.canvas.width/64,
         right: ctx.canvas.width/16,
-    }
+    };
 
-    // var points = binding.value[0].toFloat();
-    // var labels = binding.value[1];
 
     // GRAPH
     function drawChart(pts, lbls, color) {
+
+        if (pts.constructor !== Array) {
+            console.log(pts, 'is not an array');
+            return;
+        }
+
+        if (lbls.constructor !== Array) {
+            console.log(lbls, 'is not an array');
+            return;
+        }
 
         //pre-calculate scaled points for display
         var pointY = pts.scaleBetween(res.y-margins.bottom-margins.top/2, margins.top)
@@ -127,7 +140,9 @@ function fastgraph (canvasElement, points, labels, userSettings) {
                             context.font = fontsize.default + "px Arial";
                             context.save();
                             context.translate(pointX[op] + xOffset, transformedPoints[op] * 0.95);
-                            context.rotate(-settings.rotateYAxisLabels*(Math.PI / 180));
+                            if (settings.yAxisLabelRotation != 0) {
+                                context.rotate(-settings.yAxisLabelRotation*(Math.PI / 180));
+                            }
                             context.fillText(prefix + " " + originalPoints[op].niceDisplay(), 0, 0);
                             context.restore();
                             lastPoint = originalPoints[op];
@@ -163,7 +178,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         // overlay average
         /* The reason we do not reuse the graph and do it outside is the fact that
         we auto-scale the graph each frame based on it's values.*/
-        if (settings.graphAverage) {
+        if (settings.showAverage) {
             var avgColor = '#222299'
             var avgPointY = pointY.average();
             var avgValue = pts.average();
@@ -177,44 +192,51 @@ function fastgraph (canvasElement, points, labels, userSettings) {
             labelExtremes(avgValue, avgPointY, ctx, avgColor, 50, 'AVG');
         }
 
-        // if (graphTrend) {
-        //     var trendPointY = regression(pointX, pointY)[0];
-        //     console.log(trendPointY);
-
-        //     ctx.beginPath();
-        //     ctx.moveTo(margins.left, trendPointY[0]);
-        //     for (var i = 0; i < pts.length; i++) {
-        //         ctx.lineTo(pointX[i], trendPointY[i]);
-        //     }
-        //     ctx.strokeStyle="#FF0000";
-        //     ctx.stroke();
-        //     labelExtremes(trendPointY, ctx, "#FF0000");
-        // }
-
 
         labelExtremes(pts, pointY, ctx, settings.yLabelColor);
 
 
         // x-axis data labels
-        var nth = 0;
-        var reducer = Math.round(fit(pts.length, 0, 80, 1, settings.labelReductionFactor));
-        for (var op = 0; op < pts.length; op++) {
-            
-            if (lbls[op] == undefined) {
-                continue;
-            }
 
-            if (nth == reducer || op == 0) {
-                nth = 0;
-                //vertical bars
-                ctx.fillStyle = settings.verticalBarColor;
-                ctx.fillRect(pointX[op], res.y-margins.bottom, 1, margins.bottom + -(res.y-pointY[op]));
-                //label
-                ctx.fillStyle = settings.xLabelColor;
-                ctx.fillText(lbls[op], pointX[op], res.y - margins.bottom / 2);
+
+        if (lbls != undefined) {
+            var nth = 0;
+            var reducer = Math.round(fit(pts.length, 0, 80, 1, settings.labelReductionFactor));
+            for (var op = 0; op < pts.length; op++) {
+                
+                if (lbls[op] == undefined) {
+                    continue;
+                }
+
+                if (nth == reducer || op == 0) {
+                    nth = 0;
+                    
+                    // === Draw vertical bars
+                    if (settings.showVerticalBars) {
+                        ctx.fillStyle = settings.verticalBarColor;
+                        ctx.fillRect(pointX[op], res.y-margins.bottom, 1, margins.bottom + -(res.y-pointY[op]));
+                    }
+
+                    // === Draw label
+                    ctx.fillStyle = settings.xLabelColor;
+                    ctx.save();
+                    if (settings.xAxisLabelRotation != 0) {
+                        ctx.save();
+                        ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+                        ctx.rotate(10 * Math.PI / 180);
+                        // ctx.drawImage(image, -image.width / 2, -image.height / 2);
+                        ctx.fillText(lbls[op], pointX[op], res.y - margins.bottom / 2);
+                        
+                        ctx.restore();
+
+                    }
+                    // ctx.fillText(lbls[op], pointX[op], res.y - margins.bottom / 2);
+                    ctx.restore();
+                    
+                }
+                nth ++;
             }
-            nth ++;
-        }
+    }
     }
 
 
