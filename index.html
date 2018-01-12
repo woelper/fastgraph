@@ -10,13 +10,14 @@
     <canvas id="ex-basic"></canvas>
     <canvas id="ex-densepoints"></canvas>
     <canvas id="ex-dynamic"></canvas>
+    <canvas id="ex-sized" style="width: 100%; height: 200px;"></canvas>
     
     <script>
       //ex-basic
-      var points = [1,2,3,1,2,3,10,3,4,3];
-      var labels = ['a','b','c','d','e','f','g','h','i','j'];
+      var basicpoints = [1,2,3,1,2,3,10,3,4,3];
+      var basiclabels = ['a','b','c','d','e','f','g','h','i','j'];
       var canvas = document.getElementById("ex-basic");
-      fastgraph(canvas, points, labels);
+      fastgraph(canvas, basicpoints, basiclabels);
     </script>
 
 
@@ -58,6 +59,19 @@
     setInterval(function(){ update(); }, 35);
 
   </script>
+
+<script>
+  //ex-sized
+  var points = Array.from({length: 150}, () => Math.floor(Math.random() * 40));
+  var labels = points;
+  var canvassized = document.getElementById("ex-sized");
+  var settings = {
+    fillArea : true,
+    labelReductionFactor: 20
+  }
+  fastgraph(canvassized, points, labels, settings);
+</script>
+
 
 
   </body>
