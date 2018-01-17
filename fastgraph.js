@@ -64,20 +64,20 @@ function fastgraph (canvasElement, points, labels, userSettings) {
 
     // console.log('Pixel ratio:', window.devicePixelRatio);
     var settings = {
-        labelReductionFactor: 1, //the higher the factor, the higher the reduction
-        
-        showAverage: false, //calculate a line expressing the average
-        showTrend: false, //calculate a trend line
+        labelReductionFactor: 1, // the higher the factor, the higher the reduction
+        labelMaxLength: 10, // clip labels
+        showAverage: false, // calculate a line expressing the average
+        showTrend: false, // calculate a trend line
         showVerticalBars: false,
-        yAxisLabelRotation: 0, //degrees. rotate the y axis labels by this amount. Good for dense data.
-        xAxisLabelRotation: 20, //degrees. rotate the x axis labels by this amount. Good for dense data.
-        fillArea: false, //fill the area below the graph?
+        yAxisLabelRotation: 0, // degrees. rotate the y axis labels by this amount. Good for dense data.
+        xAxisLabelRotation: 20, // degrees. rotate the x axis labels by this amount. Good for dense data.
+        fillArea: false, // fill the area below the graph?
         fontsize: ctx.canvas.height/15,
-        graphColor: "#ccc", //the graph line
-        areaFillColor: "rgba(63,81,181,0.1)", //graph area fill color
-        verticalBarColor: "#cccccc", //the vertical indicators above the y-legends
-        xLabelColor: "#888", //well, the color of the x labels.
-        yLabelColor: "#888" //can you guess?
+        graphColor: "#ccc", // the graph line
+        areaFillColor: "rgba(63,81,181,0.1)", // graph area fill color
+        verticalBarColor: "#cccccc", // the vertical indicators above the y-legends
+        xLabelColor: "#888", // well, the color of the x labels.
+        yLabelColor: "#888" // can you guess?
     };
 
     if (userSettings != undefined) {
@@ -96,7 +96,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         // ctx.canvas.height = ctx.canvas.clientHeight * window.devicePixelRatio;
     }
 
-    ctx.scale(1/window.devicePixelRatio, 1/window.devicePixelRatio);
+    // ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     var res = {
         x: ctx.canvas.width,
@@ -106,8 +106,8 @@ function fastgraph (canvasElement, points, labels, userSettings) {
     var margins = {
         bottom: res.y/8,
         top: res.y/4,
-        left: res.x/64,
-        right: res.x/16,
+        left: res.x/32,
+        right: res.x/32,
     };
 
 
@@ -214,6 +214,8 @@ function fastgraph (canvasElement, points, labels, userSettings) {
                     continue;
                 }
 
+                var label = String(lbls[op]);
+
                 if (nth == reducer || op == 0) {
                     nth = 0;
                     
@@ -225,20 +227,9 @@ function fastgraph (canvasElement, points, labels, userSettings) {
 
                     // === Draw label
                     ctx.fillStyle = settings.xLabelColor;
-                    
-                    // ctx.save();
-                    // if (settings.xAxisLabelRotation != 0) {
-                    //     ctx.save();
-                    //     ctx.translate(res.x / 2, res.y / 2);
-                    //     ctx.rotate(10 * Math.PI / 180);
-                    //     // ctx.drawImage(image, -image.width / 2, -image.height / 2);
-                    //     ctx.fillText(lbls[op], pointX[op], res.y - margins.bottom / 2);
-                        
-                    //     ctx.restore();
 
-                    // }
-                    ctx.fillText(lbls[op], pointX[op], res.y - margins.bottom / 2);
-                    // ctx.restore();
+                    ctx.fillText(label.substring(0, settings.labelMaxLength), pointX[op], res.y - margins.bottom / 2);
+
                     
                 }
                 nth ++;
