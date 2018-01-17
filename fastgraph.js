@@ -65,14 +65,14 @@ function fastgraph (canvasElement, points, labels, userSettings) {
     // console.log('Pixel ratio:', devicePixelRatio);
     var settings = {
         labelReductionFactor: 1, // the higher the factor, the higher the reduction
-        labelMaxLength: 10, // clip labels
+        labelMaxLength: 6, // clip labels
         showAverage: false, // calculate a line expressing the average
         showTrend: false, // calculate a trend line
         showVerticalBars: false,
         yAxisLabelRotation: 0, // degrees. rotate the y axis labels by this amount. Good for dense data.
         xAxisLabelRotation: 20, // degrees. rotate the x axis labels by this amount. Good for dense data.
         fillArea: false, // fill the area below the graph?
-        fontsize: (ctx.canvas.height/16),
+        fontSize: undefined,
         graphColor: "#ccc", // the graph line
         areaFillColor: "rgba(63,81,181,0.1)", // graph area fill color
         verticalBarColor: "#cccccc", // the vertical indicators above the y-legends
@@ -97,7 +97,11 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         ctx.canvas.style.height =  Math.round(ctx.canvas.height/devicePixelRatio) + 'px';
     }
     
-
+    if (settings.fontSize === undefined) {
+        console.log(ctx.canvas.height);
+        
+        settings.fontSize = fit(ctx.canvas.height, 0, 600, 10, 18);
+    }
 
     var res = {
         x: ctx.canvas.width,
@@ -144,7 +148,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
                     if (op == 0 || (originalPoints[op] == bounds.max || originalPoints[op] == bounds.min)) {
                         if (originalPoints[op] != lastPoint) {
                             context.fillStyle = color;
-                            context.font = settings.fontsize + "px Arial";
+                            context.font = settings.fontSize + "px Arial";
                             context.save();
                             context.translate(pointX[op] + xOffset, transformedPoints[op] * 0.95);
                             if (settings.yAxisLabelRotation != 0) {
