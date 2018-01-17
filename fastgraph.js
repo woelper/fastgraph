@@ -72,7 +72,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         yAxisLabelRotation: 0, // degrees. rotate the y axis labels by this amount. Good for dense data.
         xAxisLabelRotation: 20, // degrees. rotate the x axis labels by this amount. Good for dense data.
         fillArea: false, // fill the area below the graph?
-        fontsize: (ctx.canvas.height/16) * (devicePixelRatio),
+        fontsize: (ctx.canvas.height/16),
         graphColor: "#ccc", // the graph line
         areaFillColor: "rgba(63,81,181,0.1)", // graph area fill color
         verticalBarColor: "#cccccc", // the vertical indicators above the y-legends
@@ -179,6 +179,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
             ctx.fill();
         } else {
             ctx.strokeStyle = settings.graphColor;
+            ctx.lineWidth = devicePixelRatio;
             ctx.stroke();
         }
 
