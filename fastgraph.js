@@ -62,7 +62,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
     var ctx = canvasElement.getContext("2d");
 
 
-    // console.log('Pixel ratio:', window.devicePixelRatio);
+    // console.log('Pixel ratio:', devicePixelRatio);
     var settings = {
         labelReductionFactor: 1, // the higher the factor, the higher the reduction
         labelMaxLength: 10, // clip labels
@@ -72,7 +72,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         yAxisLabelRotation: 0, // degrees. rotate the y axis labels by this amount. Good for dense data.
         xAxisLabelRotation: 20, // degrees. rotate the x axis labels by this amount. Good for dense data.
         fillArea: false, // fill the area below the graph?
-        fontsize: ctx.canvas.height/15,
+        fontsize: (ctx.canvas.height/16) * (devicePixelRatio),
         graphColor: "#ccc", // the graph line
         areaFillColor: "rgba(63,81,181,0.1)", // graph area fill color
         verticalBarColor: "#cccccc", // the vertical indicators above the y-legends
@@ -80,23 +80,24 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         yLabelColor: "#888" // can you guess?
     };
 
-    if (userSettings != undefined) {
+    if (userSettings !== undefined) {
         settings = Object.assign(settings, userSettings);
     }
+ 
+    var rect = ctx.canvas.getBoundingClientRect();
+    ctx.canvas.width = Math.round (devicePixelRatio * rect.right) - Math.round (devicePixelRatio * rect.left);
+    ctx.canvas.height = Math.round (devicePixelRatio * rect.bottom) - Math.round (devicePixelRatio * rect.top);
 
-
+        
+    if (! ctx.canvas.style.width.includes('%')) {
+        ctx.canvas.style.width =  Math.round(ctx.canvas.width/devicePixelRatio) + 'px';
+    }
     
-    if (ctx.canvas.clientWidth != 0) {
-        ctx.canvas.width = ctx.canvas.clientWidth;
-        // ctx.canvas.width = ctx.canvas.clientWidth * window.devicePixelRatio;
+    if (! ctx.canvas.style.height.includes('%')) {
+        ctx.canvas.style.height =  Math.round(ctx.canvas.height/devicePixelRatio) + 'px';
     }
+    
 
-    if (ctx.canvas.clientHeight != 0) {
-        ctx.canvas.height = ctx.canvas.clientHeight;
-        // ctx.canvas.height = ctx.canvas.clientHeight * window.devicePixelRatio;
-    }
-
-    // ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     var res = {
         x: ctx.canvas.width,
@@ -115,12 +116,12 @@ function fastgraph (canvasElement, points, labels, userSettings) {
     function drawChart(pts, lbls, color) {
 
         if (pts.constructor !== Array) {
-            console.log(pts, 'is not an array');
+            console.warn(pts, 'is not an array');
             return;
         }
 
         if (lbls.constructor !== Array) {
-            console.log(lbls, 'is not an array');
+            console.warn(lbls, 'is not an array');
             return;
         }
 
@@ -240,6 +241,10 @@ function fastgraph (canvasElement, points, labels, userSettings) {
 
     drawChart(points, labels, settings.areaFillColor);
 
+
+    // ctx.scale(1/window.devicePixelRatio, 1);
+    // ctx.scale(2, 2);
+    
     // function update () {
     //     ctx.clearRect(0, 0, res.x, res.y);
     //     console.log('update', ctx.canvas.clientWidth);
