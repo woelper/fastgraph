@@ -13,64 +13,62 @@
     <canvas id="ex-sized" style="width: 100%; height: 200px;"></canvas>
     
     <script>
-      //ex-basic
       var basicpoints = [1,2,3,1,2,3,10,3,4,3];
       var basiclabels = ['a','b','c','d','e','f','g','h','i','j'];
+      var points = Array.from({length: 250}, () => Math.floor(Math.random() * 40));
+      var labels = points;
+    </script>
+
+
+    <script>
+      //ex-basic
       var canvas = document.getElementById("ex-basic");
       fastgraph(canvas, basicpoints, basiclabels);
     </script>
 
 
-  <script>
-    //ex-densepoints
-    var points = Array.from({length: 250}, () => Math.floor(Math.random() * 40));
-    var labels = points;
-    var canvas = document.getElementById("ex-densepoints");
-    var settings = {
-      fillArea : true,
-      labelReductionFactor: 20
-    }
-    fastgraph(canvas, points, labels, settings);
-  </script>
-
-<script>
-    //ex-dynamic
-    var points = [];
-    var labels = [];
-    var canvas = document.getElementById("ex-dynamic");
-    var settings = {
-      fillArea : true,
-      labelReductionFactor: 15
-    }
-
-    function update () {
-      var val = Math.random();
-      points.push(val);
-      labels.push(Math.round(val*100)/100);
-      
-      fastgraph(canvas, points, labels, settings);
-      if (points.length > 50) {
-        // points.splice(points[points.length]);
-        points.shift();
-        labels.shift();
+    <script>
+      //ex-densepoints
+      var canvas = document.getElementById("ex-densepoints");
+      var settings = {
+        fillArea : true,
+        labelReductionFactor: 20
       }
-    }
+      fastgraph(canvas, points, labels, settings);
+    </script>
 
-    setInterval(function(){ update(); }, 35);
 
-  </script>
+    <script>
+      //ex-dynamic
+      var canvas = document.getElementById("ex-dynamic");
+      var settings = {
+        fillArea : true,
+        labelReductionFactor: 15
+      }
+      function update () {
+        var val = Math.random();
+        points.push(val);
+        labels.push(Math.round(val*100)/100);
+        fastgraph(canvas, points, labels, settings);
+        if (points.length > 50) {
+          // points.splice(points[points.length]);
+          points.shift();
+          labels.shift();
+        }
+      }
+      setInterval(function(){ update(); }, 35);
+    </script> 
 
-<script>
-  //ex-sized
-  var points = Array.from({length: 150}, () => Math.floor(Math.random() * 40));
-  var labels = points;
-  var canvassized = document.getElementById("ex-sized");
-  var settings = {
-    fillArea : true,
-    labelReductionFactor: 20
-  }
-  fastgraph(canvassized, points, labels, settings);
-</script>
+
+    <script>
+      //ex-sized
+      var canvassized = document.getElementById("ex-sized");
+      var settings = {
+        fillArea : true,
+        labelReductionFactor: 20
+      }
+      fastgraph(canvassized, points, labels, settings);
+    </script>
 
 
 
