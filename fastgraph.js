@@ -79,7 +79,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
         verticalBarColor: '#cccccc', // the vertical indicators above the y-legends
         xLabelColor: '#888', // well, the color of the x labels.
         yLabelColor: '#888', // can you guess?,
-        lineWidth: devicePixelRatio*2
+        lineWidth: devicePixelRatio*1.5
     };
 
     if (userSettings !== undefined) {
@@ -99,7 +99,7 @@ function fastgraph (canvasElement, points, labels, userSettings) {
     }
     
     if (settings.fontSize === undefined) {
-        settings.fontSize = fit(devicePixelRatio, 1, 4, 12, 64);
+        settings.fontSize = fit(devicePixelRatio, 1, 4, 12, 50);
     } else {
         settings.fontSize *= devicePixelRatio;
     }
