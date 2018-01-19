@@ -1,0 +1,18 @@
+{
+    "name": "fastgraph",
+    "version": "1.0.0",
+    "description": "A quick graphing thingy",
+    "main": "",
+    "scripts": {
+      "build": "uglifyjs fastgraph.js --mangle --compress -o fastgraph.min.js",
+      "serve": "node_modules/serve/bin/serve.js"
+    },
+    "author": "Johann Woelper",
+    "license": "ISC",
+    "devDependencies": {
+    },
+    "dependencies": {
+      "serve": "^6.4.8"
+    }
+  }
+  
